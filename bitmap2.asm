@@ -4,8 +4,8 @@
   displayAddress:	.word	0x10008000 # base address of the display
 .text
   lw  $t0, displayAddress	# $t0 stores the base address for display
-  li  $t1, 0xfed700	# $t1 stores the red chip color
-  li  $t2, 0xff00000	# $t2 stores the yellow chip color
+  li  $t1, 0xfed700	# $t1 stores the yellow chip color
+  li  $t2, 0xff00000	# $t2 stores the red chip color
   li  $t3, 0x0020fb	# $t3 stores the primary color of the board
   
   li  $t4, 0 #units in the row counter
@@ -55,7 +55,7 @@
 	li $v0, 10 # terminate the program gracefully
 	syscall
   
-   makeCircle: #a0 -> x pos, a1 -> ypos
+   makeCircle: #a0 -> x pos, a1 -> ypos $a3 --> color
    	lw  	$t0, displayAddress
     	addi	$t0, $t0, 49280 #(32 rows * 256 units * 4) + (16 units of left padding * 4 + 16 units to the center * 4) 
     	
@@ -77,122 +77,319 @@
     	
     	
     	
-    	sw	$a3, 52($t0)
-    	sw	$a3, 48($t0)
-    	sw	$a3, 44($t0)
-    	sw	$a3, 40($t0)
-    	sw	$a3, 36($t0)
-    	sw	$a3, 32($t0)
-    	sw	$a3, 28($t0)
-    	sw	$a3, 24($t0)
-    	sw	$a3, 20($t0)
-    	sw	$a3, 16($t0)
-    	sw	$a3, 12($t0)
-    	sw	$a3, 8($t0)
-    	sw	$a3, 4($t0)
+    	
+    	addiu   $sp, $sp, -12 #allocates stack memory for the return address
+    	sw	$ra, ($sp)
+    	sw	$a0, 4($sp)
+    	sw	$a1, 8($sp)
+    	move 	$a0, $t0
+    	li	$a1, 0
+    	li	$a2, 10
+    	jal	drawCircleRow
+    	lw	$ra, ($sp)
+    	lw	$a0, 4($sp)
+    	lw	$a1, 8($sp)
+    	addiu	$sp, $sp, 12 #reallocates the stack memory
+    	
+    	addiu   $sp, $sp, -12 #allocates stack memory for the return address
+    	sw	$ra, ($sp)
+    	sw	$a0, 4($sp)
+    	sw	$a1, 8($sp)
+    	move 	$a0, $t0
+    	li	$a1, 1 #<---- row number
+    	li	$a2, 10 #<---- row size
+    	jal	drawCircleRow
+    	lw	$ra, ($sp)
+    	lw	$a0, 4($sp)
+    	lw	$a1, 8($sp)
+    	addiu	$sp, $sp, 12 #reallocates the stack memory
+    	
+    	addiu   $sp, $sp, -12 #allocates stack memory for the return address
+    	sw	$ra, ($sp)
+    	sw	$a0, 4($sp)
+    	sw	$a1, 8($sp)
+    	move 	$a0, $t0
+    	li	$a1, 2 #<---- row number
+    	li	$a2, 10 #<---- row size
+    	jal	drawCircleRow
+    	lw	$ra, ($sp)
+    	lw	$a0, 4($sp)
+    	lw	$a1, 8($sp)
+    	addiu	$sp, $sp, 12 #reallocates the stack memory
+    	
+    	addiu   $sp, $sp, -12 #allocates stack memory for the return address
+    	sw	$ra, ($sp)
+    	sw	$a0, 4($sp)
+    	sw	$a1, 8($sp)
+    	move 	$a0, $t0
+    	li	$a1, 3 #<---- row number
+    	li	$a2, 10 #<---- row size
+    	jal	drawCircleRow
+    	lw	$ra, ($sp)
+    	lw	$a0, 4($sp)
+    	lw	$a1, 8($sp)
+    	addiu	$sp, $sp, 12 #reallocates the stack memory
+    	
+    	addiu   $sp, $sp, -12 #allocates stack memory for the return address
+    	sw	$ra, ($sp)
+    	sw	$a0, 4($sp)
+    	sw	$a1, 8($sp)
+    	move 	$a0, $t0
+    	li	$a1, 4 #<---- row number
+    	li	$a2, 9 #<---- row size
+    	jal	drawCircleRow
+    	lw	$ra, ($sp)
+    	lw	$a0, 4($sp)
+    	lw	$a1, 8($sp)
+    	addiu	$sp, $sp, 12 #reallocates the stack memory
+    	
+    	addiu   $sp, $sp, -12 #allocates stack memory for the return address
+    	sw	$ra, ($sp)
+    	sw	$a0, 4($sp)
+    	sw	$a1, 8($sp)
+    	move 	$a0, $t0
+    	li	$a1, 5 #<---- row number
+    	li	$a2, 9 #<---- row size
+    	jal	drawCircleRow
+    	lw	$ra, ($sp)
+    	lw	$a0, 4($sp)
+    	lw	$a1, 8($sp)
+    	addiu	$sp, $sp, 12 #reallocates the stack memory
+    	
+    	addiu   $sp, $sp, -12 #allocates stack memory for the return address
+    	sw	$ra, ($sp)
+    	sw	$a0, 4($sp)
+    	sw	$a1, 8($sp)
+    	move 	$a0, $t0
+    	li	$a1, 6 #<---- row number
+    	li	$a2, 8 #<---- row size
+    	jal	drawCircleRow
+    	lw	$ra, ($sp)
+    	lw	$a0, 4($sp)
+    	lw	$a1, 8($sp)
+    	addiu	$sp, $sp, 12 #reallocates the stack memory
+    	
+    	addiu   $sp, $sp, -12 #allocates stack memory for the return address
+    	sw	$ra, ($sp)
+    	sw	$a0, 4($sp)
+    	sw	$a1, 8($sp)
+    	move 	$a0, $t0
+    	li	$a1, 7 #<---- row number
+    	li	$a2, 7 #<---- row size
+    	jal	drawCircleRow
+    	lw	$ra, ($sp)
+    	lw	$a0, 4($sp)
+    	lw	$a1, 8($sp)
+    	addiu	$sp, $sp, 12 #reallocates the stack memory
     	
     	
-    	sw	$a3, -52($t0)
-    	sw	$a3, -48($t0)
-    	sw	$a3, -44($t0)
-    	sw	$a3, -40($t0)
-    	sw	$a3, -36($t0)
-    	sw	$a3, -32($t0)
-    	sw	$a3, -28($t0)
-    	sw	$a3, -24($t0)
-    	sw	$a3, -20($t0)
-    	sw	$a3, -16($t0)
-    	sw	$a3, -12($t0)
-    	sw	$a3, -8($t0)
-    	sw	$a3, -4($t0)
+    	addiu   $sp, $sp, -12 #allocates stack memory for the return address
+    	sw	$ra, ($sp)
+    	sw	$a0, 4($sp)
+    	sw	$a1, 8($sp)
+    	move 	$a0, $t0
+    	li	$a1, 8 #<---- row number
+    	li	$a2, 6 #<---- row size
+    	jal	drawCircleRow
+    	lw	$ra, ($sp)
+    	lw	$a0, 4($sp)
+    	lw	$a1, 8($sp)
+    	addiu	$sp, $sp, 12 #reallocates the stack memory
     	
-    	sw	$a3, 14336($t0)
-    	sw	$a3, -14336($t0)
+    	addiu   $sp, $sp, -12 #allocates stack memory for the return address
+    	sw	$ra, ($sp)
+    	sw	$a0, 4($sp)
+    	sw	$a1, 8($sp)
+    	move 	$a0, $t0
+    	li	$a1, 9 #<---- row number
+    	li	$a2, 5 #<---- row size
+    	jal	drawCircleRow
+    	lw	$ra, ($sp)
+    	lw	$a0, 4($sp)
+    	lw	$a1, 8($sp)
+    	addiu	$sp, $sp, 12 #reallocates the stack memory
     	
-    	sw	$a3, -2052($t0)
-    	sw	$a3, -2048($t0)
-    	sw	$a3, -2044($t0)
-    	sw	$a3, -2040($t0)
-    	sw	$a3, -2036($t0)
-    	sw	$a3, -2032($t0)
-    	sw	$a3, -2028($t0)
-    	sw	$a3, -2024($t0)
-    	sw	$a3, -2020($t0)
-    	sw	$a3, -2016($t0)
-    	sw	$a3, -2012($t0)
-    	sw	$a3, -2008($t0)
+    	addiu   $sp, $sp, -12 #allocates stack memory for the return address
+    	sw	$ra, ($sp)
+    	sw	$a0, 4($sp)
+    	sw	$a1, 8($sp)
+    	move 	$a0, $t0
+    	li	$a1, 10 #<---- row number
+    	li	$a2, 3 #<---- row size
+    	jal	drawCircleRow
+    	lw	$ra, ($sp)
+    	lw	$a0, 4($sp)
+    	lw	$a1, 8($sp)
+    	addiu	$sp, $sp, 12 #reallocates the stack memory
+    	
+    
+    	
+    	addiu   $sp, $sp, -12 #allocates stack memory for the return address
+    	sw	$ra, ($sp)
+    	sw	$a0, 4($sp)
+    	sw	$a1, 8($sp)
+    	move 	$a0, $t0
+    	li	$a1, -1 #<---- row number
+    	li	$a2, 10 #<---- row size
+    	jal	drawCircleRow
+    	lw	$ra, ($sp)
+    	lw	$a0, 4($sp)
+    	lw	$a1, 8($sp)
+    	addiu	$sp, $sp, 12 #reallocates the stack memory
+    	
+    	addiu   $sp, $sp, -12 #allocates stack memory for the return address
+    	sw	$ra, ($sp)
+    	sw	$a0, 4($sp)
+    	sw	$a1, 8($sp)
+    	move 	$a0, $t0
+    	li	$a1, -2 #<---- row number
+    	li	$a2, 10 #<---- row size
+    	jal	drawCircleRow
+    	lw	$ra, ($sp)
+    	lw	$a0, 4($sp)
+    	lw	$a1, 8($sp)
+    	addiu	$sp, $sp, 12 #reallocates the stack memory
+    	
+    	addiu   $sp, $sp, -12 #allocates stack memory for the return address
+    	sw	$ra, ($sp)
+    	sw	$a0, 4($sp)
+    	sw	$a1, 8($sp)
+    	move 	$a0, $t0
+    	li	$a1, -3 #<---- row number
+    	li	$a2, 10 #<---- row size
+    	jal	drawCircleRow
+    	lw	$ra, ($sp)
+    	lw	$a0, 4($sp)
+    	lw	$a1, 8($sp)
+    	addiu	$sp, $sp, 12 #reallocates the stack memory
+    	
+    	addiu   $sp, $sp, -12 #allocates stack memory for the return address
+    	sw	$ra, ($sp)
+    	sw	$a0, 4($sp)
+    	sw	$a1, 8($sp)
+    	move 	$a0, $t0
+    	li	$a1, -4 #<---- row number
+    	li	$a2, 9 #<---- row size
+    	jal	drawCircleRow
+    	lw	$ra, ($sp)
+    	lw	$a0, 4($sp)
+    	lw	$a1, 8($sp)
+    	addiu	$sp, $sp, 12 #reallocates the stack memory
+    	
+    	addiu   $sp, $sp, -12 #allocates stack memory for the return address
+    	sw	$ra, ($sp)
+    	sw	$a0, 4($sp)
+    	sw	$a1, 8($sp)
+    	move 	$a0, $t0
+    	li	$a1, -5 #<---- row number
+    	li	$a2, 9 #<---- row size
+    	jal	drawCircleRow
+    	lw	$ra, ($sp)
+    	lw	$a0, 4($sp)
+    	lw	$a1, 8($sp)
+    	addiu	$sp, $sp, 12 #reallocates the stack memory
+    	
+    	addiu   $sp, $sp, -12 #allocates stack memory for the return address
+    	sw	$ra, ($sp)
+    	sw	$a0, 4($sp)
+    	sw	$a1, 8($sp)
+    	move 	$a0, $t0
+    	li	$a1, -6 #<---- row number
+    	li	$a2, 8 #<---- row size
+    	jal	drawCircleRow
+    	lw	$ra, ($sp)
+    	lw	$a0, 4($sp)
+    	lw	$a1, 8($sp)
+    	addiu	$sp, $sp, 12 #reallocates the stack memory
+    	
+    	addiu   $sp, $sp, -12 #allocates stack memory for the return address
+    	sw	$ra, ($sp)
+    	sw	$a0, 4($sp)
+    	sw	$a1, 8($sp)
+    	move 	$a0, $t0
+    	li	$a1, -7 #<---- row number
+    	li	$a2, 7 #<---- row size
+    	jal	drawCircleRow
+    	lw	$ra, ($sp)
+    	lw	$a0, 4($sp)
+    	lw	$a1, 8($sp)
+    	addiu	$sp, $sp, 12 #reallocates the stack memory
     	
     	
-    	sw	$a3 -1064($t0)
-    	sw	$a3 -1060($t0)
-    	sw	$a3 -1056($t0)
-    	sw	$a3 -1052($t0)
-    	sw	$a3 -1048($t0)
-    	sw	$a3 -1044($t0)
-    	sw	$a3 -1040($t0)
-    	sw	$a3 -1036($t0)
-    	sw	$a3 -1032($t0)
-    	sw	$a3 -1028($t0)
-    	sw	$a3 -1024($t0)
-    	sw	$a3 -1020($t0)
-    	sw	$a3 -1016($t0)
-    	sw	$a3 -1012($t0)
-    	sw	$a3 -1008($t0)
-    	sw	$a3 -1004($t0)
-    	sw	$a3 -1000($t0)
-    	sw	$a3 -996($t0)
-    	sw	$a3 -992($t0)
-    	sw	$a3 -988($t0)
-    	sw	$a3 -984($t0)
-    	sw	$a3 -980($t0)
-    	sw	$a3 -976($t0)
+    	addiu   $sp, $sp, -12 #allocates stack memory for the return address
+    	sw	$ra, ($sp)
+    	sw	$a0, 4($sp)
+    	sw	$a1, 8($sp)
+    	move 	$a0, $t0
+    	li	$a1, -8 #<---- row number
+    	li	$a2, 6 #<---- row size
+    	jal	drawCircleRow
+    	lw	$ra, ($sp)
+    	lw	$a0, 4($sp)
+    	lw	$a1, 8($sp)
+    	addiu	$sp, $sp, 12 #reallocates the stack memory
     	
-    	sw	$a3 1064($t0)
-    	sw	$a3 1060($t0)
-    	sw	$a3 1056($t0)
-    	sw	$a3 1052($t0)
-    	sw	$a3 1048($t0)
-    	sw	$a3 1044($t0)
-    	sw	$a3 1040($t0)
-    	sw	$a3 1036($t0)
-    	sw	$a3 1032($t0)
-    	sw	$a3 1028($t0)
-    	sw	$a3 1024($t0)
-    	sw	$a3 1020($t0)
-    	sw	$a3 1016($t0)
-    	sw	$a3 1012($t0)
-    	sw	$a3 1008($t0)
-    	sw	$a3 1004($t0)
-    	sw	$a3 1000($t0)
-    	sw	$a3 996($t0)
-    	sw	$a3 992($t0)
-    	sw	$a3 988($t0)
-    	sw	$a3 984($t0)
-    	sw	$a3 980($t0)
-    	sw	$a3 976($t0)
+    	addiu   $sp, $sp, -12 #allocates stack memory for the return address
+    	sw	$ra, ($sp)
+    	sw	$a0, 4($sp)
+    	sw	$a1, 8($sp)
+    	move 	$a0, $t0
+    	li	$a1, -9 #<---- row number
+    	li	$a2, 5 #<---- row size
+    	jal	drawCircleRow
+    	lw	$ra, ($sp)
+    	lw	$a0, 4($sp)
+    	lw	$a1, 8($sp)
+    	addiu	$sp, $sp, 12 #reallocates the stack memory
     	
+    	addiu   $sp, $sp, -12 #allocates stack memory for the return address
+    	sw	$ra, ($sp)
+    	sw	$a0, 4($sp)
+    	sw	$a1, 8($sp)
+    	move 	$a0, $t0
+    	li	$a1, -10 #<---- row number
+    	li	$a2, 3 #<---- row size
+    	jal	drawCircleRow
+    	lw	$ra, ($sp)
+    	lw	$a0, 4($sp)
+    	lw	$a1, 8($sp)
+    	addiu	$sp, $sp, 12 #reallocates the stack memory
     	
-    	sw	$a3, 2052($t0)
-    	sw	$a3, 2048($t0)
-    	sw	$a3, 2044($t0)
-    	sw	$a3, 2040($t0)
-    	sw	$a3, 2036($t0)
-    	sw	$a3, 2032($t0)
-    	sw	$a3, 2028($t0)
-    	sw	$a3, 2024($t0)
-    	sw	$a3, 2020($t0)
-    	sw	$a3, 2016($t0)
-    	sw	$a3, 2012($t0)
-    	sw	$a3, 2008($t0)
-    	sw	$a3, 2004($t0)
-    	sw	$a3, 2000($t0)
     	
     	
     	
     	jr	$ra
     		
     	
-  
+drawCircleRow: #$a0-> base address $a1-> row num $a2->row size
+	
+	sll	$a1, $a1, 10
+	add	$a0, $a0, $a1
+	addi	$t9, $a0, 0
+	
+	li	$t8, 0
+	
+	sw	$a3, ($a0)
+	
+	
+	loop:
+		
+		addi 	$a0, $a0, 4
+		sw  	$a3, ($a0)
+		
+		
+		addi	$t9, $t9, -4
+		sw	$a3, ($t9)
+		
+		addi 	$t8, $t8, 1
+		
+		bne	$t8, $a2, loop
+	
+	
+	jr $ra
+	
+	
+	
  
    
     
