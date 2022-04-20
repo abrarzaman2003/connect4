@@ -7,6 +7,7 @@
   li  $t1, 0xfed700	# $t1 stores the yellow chip color
   li  $t2, 0xff00000	# $t2 stores the red chip color
   li  $t3, 0x0020fb	# $t3 stores the primary color of the board
+  li  $s0, 0x00000000
   
   li  $t4, 0 #units in the row counter
   li  $t5, 224 #max units in the row
@@ -32,7 +33,7 @@
     li 		$t4, 0  # circles in a row incrementer
     li		$t5, 7 # maximum circles in the row
     
-    li 		$t6, 0  # number of rows of circles
+    li 		$t6, -1  # number of rows of circles
     li		$t7, 6 # maximum rows of circles
     
     
@@ -42,7 +43,7 @@
     	
   	move	$a0, $t4
   	move	$a1, $t6
-  	move 	$a3, $t1
+  	move 	$a3, $s0
    	jal 	makeCircle
    	addi	$t4, $t4, 1
    	bne	$t4, $t5, markPoints
@@ -50,6 +51,28 @@
    	addi	$t6, $t6, 1
 	li	$t4, 0
 	bne	$t6, $t7, markPoints
+
+
+	li $s0, 0xffff0000
+gameLoop:
+	lw $s1, ($s0)
+	beq $s1, $zero, checkAgain
+	
+	lw $s2, 4($s0)
+	
+	subi $s2, $s2, 48
+	
+	move	$a0, $s2
+	move	$a3, $t1
+	li	$a1, 5
+	
+	jal makeCircle
+	
+	
+	
+checkAgain:
+	j gameLoop
+  
    	
   Exit:
 	li $v0, 10 # terminate the program gracefully
