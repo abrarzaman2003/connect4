@@ -2,6 +2,9 @@
 
 .data
   displayAddress:	.word	0x10008000 # base address of the display
+  stateArray: 		.word 	0x05050505, 0x00050505
+  
+  
 .text
   lw  $t0, displayAddress	# $t0 stores the base address for display
   li  $t1, 0xfed700	# $t1 stores the yellow chip color
@@ -52,7 +55,7 @@
 	li	$t4, 0
 	bne	$t6, $t7, markPoints
 
-
+	li	$s3, 7
 	li $s0, 0xffff0000
 gameLoop:
 	lw $s1, ($s0)
@@ -63,15 +66,48 @@ gameLoop:
 	subi $s2, $s2, 48
 	
 	move	$a0, $s2
-	move	$a3, $t1
-	li	$a1, 5
+	
+	
+	
+	
+		
+	lbu $s4 stateArray($s3)
+	
+	lbu $s5, stateArray($s2)
+	
+	move $a1, $s5
+	
+	addi $s5, $s5, -1
+	
+	beq $s4, $zero, yellow
+	
+	move $a3, $t2
+	j cont
+	
+	yellow:
+	move $a3, $t1
+	
+	cont:
+	not  $s4, $s4
+	
+	sb  $s4 stateArray($s3)
+	sb  $s5, stateArray($s2)
+	
+	
+		
 	
 	jal makeCircle
+
+	
+	
+	
 	
 	
 	
 checkAgain:
 	j gameLoop
+	
+
   
    	
   Exit:
