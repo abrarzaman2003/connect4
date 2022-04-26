@@ -2,7 +2,9 @@
 
 .data
   displayAddress:	.word	0x10008000 # base address of the display
-  stateArray: 		.word 	0x05050505, 0x00050505
+  heightMap: 		.word 	0x05050505, 0x00050505
+  board:		.space	48
+  
   
   
 .text
@@ -60,20 +62,24 @@
 gameLoop:
 	lw $s1, ($s0)
 	beq $s1, $zero, checkAgain
-	
+	li	$s6, -1
+	li	$s7, 6
 	lw $s2, 4($s0)
 	
 	subi $s2, $s2, 48
 	
+	blt $s2, $zero, gameLoop
+	bgt $s2, $s7, gameLoop
+	
 	move	$a0, $s2
 	
 	
-	
-	
 		
-	lbu $s4 stateArray($s3)
+	lb $s4 heightMap($s3)
 	
-	lbu $s5, stateArray($s2)
+	lb $s5, heightMap($s2)
+	
+	beq $s5, $s6, gameLoop #if theres too many chips, then it just goes back to game loop
 	
 	move $a1, $s5
 	
@@ -90,15 +96,28 @@ gameLoop:
 	cont:
 	not  $s4, $s4
 	
-	sb  $s4 stateArray($s3)
-	sb  $s5, stateArray($s2)
+	sb  $s4 heightMap($s3)
+	sb  $s5, heightMap($s2)
 	
 	
 		
 	
 	jal makeCircle
 
-	
+	li $a0, 2
+	li $v0, 32
+	li $a0, 60
+	li $a1, 300
+	li $a2, 104
+	li $a3, 127
+	li $v0, 33
+	syscall
+	li $a0, 67
+	li $a1, 300
+	li $a2, 104
+	li $a3, 127
+	li $v0, 33
+	syscall
 	
 	
 	
