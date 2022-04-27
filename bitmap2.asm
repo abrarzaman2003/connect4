@@ -130,6 +130,10 @@
 	li	$s3, 7
 	li $s0, 0xffff0000
 gameLoop:
+
+	
+	
+	
 	lw $s1, ($s0)
 	beq $s1, $zero, checkAgain
 	li	$s6, -1
@@ -157,6 +161,10 @@ gameLoop:
 	restor()
 	
 	jal opps
+	
+	save
+	jal checkDraw
+	restor
 	
 	#move	$a0, $s2
 	
@@ -1056,3 +1064,15 @@ set_board:
     sb $a1, board($t0)
     
     jr $ra #}
+
+checkDraw:
+	li $t0, 0
+	li $t1, 7
+	li $s0, -1
+	
+	 dLoop:
+	  beq	$t0, $t1, Exit
+	  lb $t2, heightMap($t0)
+	  addi $t0, $t0, 1
+	  beq $t2, $s0, dLoop
+	  jr $ra
