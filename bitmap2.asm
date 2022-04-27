@@ -141,6 +141,11 @@ gameLoop:
 	blt $s2, $zero, invalidMove #invalid character Checking
 	bgt $s2, $s7, invalidMove #invalid character Checking
 	
+		
+	lb $s5, heightMap($s2) #holds the current height of the column
+	
+	beq $s5, $s6, invalidMove #if theres too many chips, then it just goes back to game loop
+	
 	save()
 	move $a0, $s2
 	li   $a1, 1
