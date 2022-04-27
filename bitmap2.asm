@@ -23,9 +23,9 @@
  .end_macro
 
 
-.macro save ()
-addiu   $sp, $sp, -92 #allocates stack memory for the return address
-        sw $ra ($sp)
+ .macro save
+	addiu   $sp, $sp, -92 #allocates stack memory for the return address
+        sw $ra, ($sp)
         sw $t0 4($sp)
         sw $t1 8($sp)
         sw $t2 12($sp)
@@ -48,9 +48,9 @@ addiu   $sp, $sp, -92 #allocates stack memory for the return address
         sw $a1 80($sp)
         sw $a2 84($sp)
         sw $a3 88($sp)
-.end_macro
+	.end_macro
 
-.macro restor()
+	.macro restor
     lw    $ra, ($sp)
         lw    $t0, 4($sp)
         lw    $t1, 8($sp)
@@ -75,7 +75,7 @@ addiu   $sp, $sp, -92 #allocates stack memory for the return address
         lw $a2 84($sp)
         lw $a3 88($sp)
         addiu    $sp, $sp, 92 #reallocates the stack 
-.end_macro
+	.end_macro
   
 .text
   lw  $t0, displayAddress	# $t0 stores the base address for display
@@ -793,7 +793,6 @@ gcq: #args: a0 == x, a1==y (bottom row 5, top 0) a2==v, output to v0 {
 		li $t0, 1 #int i = 1
 		li $t1, 4 # holds 4 for i<4
 
-
 	diagonalForLoop1: #like \ {
 
 		sub $t2, $a0, $s2 #x-l ==> t2
@@ -818,15 +817,15 @@ gcq: #args: a0 == x, a1==y (bottom row 5, top 0) a2==v, output to v0 {
 				addi $s3 $s3, 1 #r++
 				j d1done
 		d1else2:
-		bgt $t5, $s6, d1else4 #x+r > 6
-		bgt $t9, $s5, d1else4 #y+r > 5
-			bne $t7, $zero, d1else4 #board[x+r][y+r] == 0
+		bgt $t5, $s6, d1else3 #x+r > 6
+		bgt $t9, $s5, d1else3 #y+r > 5
+			bne $t7, $zero, d1else3 #board[x+r][y+r] == 0
 				addi $s3 $s3, 1 #r++
 				j d1done
 		d1else3:
-		blt $t2, $zero, d1else3 #x-1 < 0
-		blt $t8, $zero, d1else3 #y-l <0
-			bne $t4, $zero, d1else3 #board[x-l][y-l] == 0
+		blt $t2, $zero, d1else4 #x-1 < 0
+		blt $t8, $zero, d1else4 #y-l <0
+			bne $t4, $zero, d1else4 #board[x-l][y-l] == 0
 				addi $s2 $s2, 1 #l++
 				j d1done
 		d1else4:
@@ -875,13 +874,13 @@ gcq: #args: a0 == x, a1==y (bottom row 5, top 0) a2==v, output to v0 {
 		d2else2:
 		blt $t2, $zero, d2else3 #x-l < 0	
 		bgt $t9, $s5, d2else3 #y+l > 5
-			bne $t4, $zero, d2else4 #board[x-l][y+l] == 0
+			bne $t4, $zero, d2else3 #board[x-l][y+l] == 0
 				addi $s2 $s2, 1 #l++
 				j d2done
 		d2else3:
 		bgt $t5, $s6, d2else4 #x+r > 6
 		blt $t8, $zero d2else4 #y-r < 0
-			bne $t7, $zero, d2else3 #board[x+r][y-r] == 0
+			bne $t7, $zero, d2else4 #board[x+r][y-r] == 0
 				addi $s3 $s3, 1 #r++
 				j d2done
 		d2else4:
@@ -899,7 +898,7 @@ gcq: #args: a0 == x, a1==y (bottom row 5, top 0) a2==v, output to v0 {
 		restor()
 		jr $ra #} 
 
-prio: # $a0 == x, output to $v0 
+prio: # $a0 == x, output to $v0
 	save()
 	lbu $a1 heightMap($a0) #s0 = y
 	blt $a1 $zero pend #y<0
@@ -944,6 +943,42 @@ prio: # $a0 == x, output to $v0
 	pb7:	addi $v0 $s1 10
 	pend: restor()
 		jr $ra
+
+opps: #no input, no return
+	save
+	li $s0, -1
+	li $s1, 0
+	li $s2, 7
+	
+	li $t0, 0
+	
+	forOp:
+		move $a0, $t0
+		jal prio
+			 #a would be in v(0)
+		blt $v0, $s1, elseO # if (a<p) #used bge so that if its greater than or equal it would go to else, if not it will execute the shit below
+			move $s1, $v0
+			move $s0, $t0
+		elseO:		
+	addi $t0, $t0, 1
+	blt $t0, $s2, forOp
+		#end of loop
+
+	addiu $sp, $sp, -12
+	sw $ra ($sp)
+	sw $t0 4($sp)
+	
+	move $a0, $s0
+	li $a1, 2
+	jal set_board
+	
+	lw $ra ($sp)
+	lw $t0 4($sp)
+	addiu $sp, $sp, 12
+
+	restor
+	jr $ra
+
 
 printBoard:
 #implement registers used: $t0, $t1, $t2, $s0, $s1 {
@@ -1016,39 +1051,3 @@ set_board:
     sb $a1, board($t0)
     
     jr $ra #}
- 
- 
-opps: #no input, no return
-save
-	li $s0, -1
-	li $s1, 100
-	li $s2, 7
-	
-	li $t0, 0
-	
-	forOp:
-		move $a0, $t0
-		jal prio
-			 #a would be in v(0)
-		bge $v0, $s1, elseO # if (a<p) #used bge so that if its greater than or equal it would go to else, if not it will execute the shit below
-			move $s1, $v0
-			move $s0, $t0
-		elseO:		
-	addi $t0, $t0, 1
-	blt $t0, $s2, forOp
-		#end of loop
-	
-	addiu $sp, $sp, -12
-	sw $ra ($sp)
-	sw $t0 4($sp)
-	
-	move $a0, $s0
-	li $a1, 2
-	jal set_board
-	
-	lw $ra ($sp)
-	lw $t0 4($sp)
-	addiu $sp, $sp, 12
-restor
-	jr $ra
-	
