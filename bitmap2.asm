@@ -2,14 +2,15 @@
 
 .data
   newLine: .asciiz "\n"
-  displayAddress:	.word	0x10008000 # base address of the display
+  invalidMessage: .asciiz "INVALID MOVE"
   heightMap: 		.word 	0x05050505, 0x00050505
   board:		.space	48
   yellowColor: .word 0xfed700
   redColor: .word 0x00ffffff
   white: .word 0x00ffffff
   black: .word 0x00000000
-  invalidMessage: .asciiz "INVALID MOVE"
+  displayAddress:.word	0x10008000 # base address of the display
+  
   
 
 
@@ -30,7 +31,7 @@ main:
   li	$t6, 0 #row counter
   li	$t7, 192 #number of rows
   
-  addi		$t0, $t0, 32832 #(32 rows * 256 units * 4) + (16 units of left padding * 4)
+  addi	$t0, $t0, 32832 #(32 rows * 256 units * 4) + (16 units of left padding * 4)
   
   
   makeRow:
@@ -68,6 +69,7 @@ main:
 	bne	$t6, $t7, markPoints
 
 	li	$s3, 7
+	
 	li $s0, 0xffff0000
 	
 
