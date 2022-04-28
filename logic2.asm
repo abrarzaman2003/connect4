@@ -457,8 +457,8 @@ win: #outputs lose (0) win (1) to $v0
     li $v0 0 
     li $a0 0 #i
     forw1:    li $a1 0 #j
-    li $a2 1 #color
-    forw2:    convertBoardCoords $a0 $a1 $t1
+    forw2:    li $a2 1 #color
+    convertBoardCoords $a0 $a1 $t1
     lbu $t1 board($t1)
     jal gcq
     li $t0 3
@@ -480,6 +480,7 @@ win: #outputs lose (0) win (1) to $v0
     blt $a0 7 forw1
     wend:    restor()
     jr $ra
+
 
 
 userLose:
