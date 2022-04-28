@@ -1,54 +1,3 @@
-.data
-	white: .word 0x00ffffff
-	black: .word 0x00000000
-	green: .word 0x0000ff00
-	red:   .word 0x00ff0000
-	displayAddress:	.word 0x10008000
-
-.text
-	
-	jal renderLose
-	
-Exit:
-	li $v0, 10
-	syscall	
-
-
-renderLose: #registers used : $t0, $t1
-
-	li $a0, 80
-	
-	lw $s0, displayAddress
-	lw $s1, black
-	
-	
-	
-	sll	$a0, $a0, 10
-	
-	add $s0, $s0, $a0
-	
-	li $t0, 256
-	li $t1, 60
-	
-	loop:
-	sw	$s1, ($s0)
-	addi	$s0, $s0, 4
-	addi 	$t0, $t0, -1
-	
-	bne	$t0, $zero, loop
-	
-	
-	addi	$t1, $t1, -1
-	li 	$t0, 256
-	
-	bne	$t1, $zero, loop
-	
-	lw	$s2, white
-	
-	lw $s0, displayAddress
-	sll	$a0, $a0, 10
-	
-	
 sw $s2, 86328($s0)
 sw $s2, 87352($s0)
 sw $s2, 88376($s0)
@@ -1355,4 +1304,3 @@ sw $s2, 97972($s0)
 sw $s2, 98996($s0)
 sw $s2, 100020($s0)
 sw $s2, 101044($s0)
-

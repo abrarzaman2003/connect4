@@ -1,8 +1,8 @@
 import cv2
 import numpy as np
 from matplotlib import pyplot
-img = cv2.imread('./pixil-frame-0.png')
-f= open("bruh2.txt","w+")
+img = cv2.imread('./win-screen.png')
+f= open("win.txt","w+")
 x = 90
 y = 92
 print ('RGB shape: ', img.shape)
